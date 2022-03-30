@@ -15,7 +15,7 @@ class Partner
 public:
     void addToFile(std::string element)
     {
-       fwrite(element.c_str(), sizeof(element[0]), element.size(), shoppingList.get());
+       fprintf(shoppingList.get(), "%s\n", element.c_str());
     }
 
     ShoppingList shoppingList;
