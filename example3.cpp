@@ -1,5 +1,19 @@
 #include <iostream>
 #include <stdexcept>
+#include <memory>
+
+class CustomError : public std::logic_error{
+public:
+    explicit CustomError(const std::string& message)
+	: std::logic_error(message) {}
+    explicit CustomError(const char* message)
+	: std::logic_error(message) {}
+
+    virtual ~CustomError() noexcept {}
+
+private:
+
+};
 
 void validateArguments(int argc)
 {
@@ -18,7 +32,7 @@ public:
         std::cout << "Using resource. Passed " << *arg << std::endl;
         if (*arg == 'd')
         {
-            throw std::logic_error("Passed d. d is prohibited.");
+            throw CustomError("Passed d. d is prohibited.");
         }
     }
 };
@@ -34,12 +48,13 @@ int main(int argc, char* argv[])
     {
         rsc = new Resource();
         rsc->use(argument);
-        delete rsc;
     }
-    catch (std::logic_error& e)
+    catch (CustomError& e)
     {
         std::cout << e.what() << std::endl;
     }
+    if(rsc != nullptr)
+	delete rsc;
     return 0;
 }
 
